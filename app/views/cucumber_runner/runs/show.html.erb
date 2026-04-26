@@ -57,6 +57,8 @@
   </section>
   <footer class="cr-runtime-footer" data-cucumber-runner-runtime-target="footer" hidden>
     <%= link_to "Run again", scenario_path(@scenario[:id]), class: "cr-link" %>
+    <%= prev_next_link(:prev, @prev_scenario) %>
+    <%= prev_next_link(:next, @next_scenario) %>
     <%= link_to "Pick another scenario", root_path, class: "cr-link" %>
   </footer>
 </div>
