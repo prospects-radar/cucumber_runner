@@ -34,14 +34,21 @@
   </script>
 
   <ul class="cr-scenarios" data-cucumber-runner-browse-target="list">
-    <% @features.each do |feature| %>
-      <li class="cr-feature">
-        <h2><%= feature[:name] %></h2>
-        <ul>
-          <% feature[:scenarios].each do |scenario| %>
-            <li class="cr-scenario" data-tags="<%= scenario[:tags].join(' ') %>">
-              <%= link_to scenario[:name], scenario_path(scenario[:id]) %>
-              <% scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
+    <% @features.group_by { |f| f[:breadcrumb] }.sort_by { |bc, _| bc.to_s }.each do |breadcrumb, features| %>
+      <li class="cr-breadcrumb-group" data-breadcrumb="<%= breadcrumb %>">
+        <h2 class="cr-breadcrumb-heading"><%= breadcrumb %></h2>
+        <ul class="cr-breadcrumb-features">
+          <% features.each do |feature| %>
+            <li class="cr-feature">
+              <h3><%= feature[:name] %></h3>
+              <ul>
+                <% feature[:scenarios].each do |scenario| %>
+                  <li class="cr-scenario" data-tags="<%= scenario[:tags].join(' ') %>">
+                    <%= link_to scenario[:name], scenario_path(scenario[:id]) %>
+                    <% scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
+                  </li>
+                <% end %>
+              </ul>
             </li>
           <% end %>
         </ul>
