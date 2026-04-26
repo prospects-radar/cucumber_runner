@@ -26,4 +26,11 @@ RSpec.describe CucumberRunner::MultipartBody do
     expect(body.encoding).to eq(Encoding::ASCII_8BIT)
     expect(body).to include("\x99\xFF".b)
   end
+
+  it "produces a boundary token that does not start with '--'" do
+    mp = described_class.new
+    _body, content_type = mp.finalize
+    boundary = content_type.split("boundary=").last
+    expect(boundary).not_to start_with("--")
+  end
 end

@@ -4,7 +4,7 @@ require "securerandom"
 module CucumberRunner
   class MultipartBody
     def initialize
-      @boundary = "--cr-#{SecureRandom.hex(12)}"
+      @boundary = "cr-#{SecureRandom.hex(12)}"
       @parts = []
     end
 
