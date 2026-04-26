@@ -22,3 +22,58 @@ RSpec.describe CucumberRunner::Formatter do
     expect(JSON.parse(line)).to include("type" => "run-started")
   end
 end
+
+RSpec.describe CucumberRunner::Formatter, "record-only mode (no socket)" do
+  let(:fake_config) do
+    Class.new do
+      def initialize; @callbacks = {}; end
+      def on_event(name, &block); @callbacks[name] = block; end
+      def fire(name, event); @callbacks[name].call(event); end
+    end.new
+  end
+  let(:recorder) { instance_double(CucumberRunner::HistoryRecorder, scenario_started: nil, step_finished: nil, scenario_finished: nil, flush_in_flight!: nil) }
+
+  before do
+    # Reset class-level state so instance_doubles don't leak between examples
+    CucumberRunner::Formatter.instance_variable_set(:@recorders, [])
+    CucumberRunner::Formatter.instance_variable_set(:@at_exit_installed, false)
+    ENV.delete("CUCUMBER_RUNNER_PORT")
+    ENV["CUCUMBER_RUNNER_HISTORY_URL"]    = "https://history.example"
+    ENV["CUCUMBER_RUNNER_PROJECT_ID"]     = "proj-a"
+    ENV["CUCUMBER_RUNNER_API_TOKEN"]      = "tok"
+    ENV["CUCUMBER_RUNNER_HISTORY"]        = "always"
+    allow(CucumberRunner::HistoryRecorder).to receive(:new).and_return(recorder)
+  end
+
+  after do
+    %w[CUCUMBER_RUNNER_HISTORY_URL CUCUMBER_RUNNER_PROJECT_ID CUCUMBER_RUNNER_API_TOKEN CUCUMBER_RUNNER_HISTORY].each { |k| ENV.delete(k) }
+    CucumberRunner::Formatter.instance_variable_set(:@recorders, [])
+    CucumberRunner::Formatter.instance_variable_set(:@at_exit_installed, false)
+  end
+
+  it "constructs a recorder and skips the TCP socket" do
+    expect(TCPSocket).not_to receive(:new)
+    described_class.new(fake_config)
+  end
+
+  it "registers an at_exit hook that calls flush_in_flight! on the recorder" do
+    described_class.new(fake_config)
+    # Simulate at_exit by invoking the captured proc directly through the formatter API.
+    # Implementation should expose this through a private method we invoke here.
+    expect(recorder).to receive(:flush_in_flight!)
+    CucumberRunner::Formatter.flush_recorders!
+  end
+end
+
+RSpec.describe CucumberRunner::Formatter, "history-disabled" do
+  let(:fake_config) { Class.new { def on_event(*); end }.new }
+
+  it "is a no-op when CUCUMBER_RUNNER_HISTORY=never AND no port is set" do
+    ENV.delete("CUCUMBER_RUNNER_PORT")
+    ENV["CUCUMBER_RUNNER_HISTORY"] = "never"
+    expect(TCPSocket).not_to receive(:new)
+    expect(CucumberRunner::HistoryRecorder).not_to receive(:new)
+    described_class.new(fake_config)
+    ENV.delete("CUCUMBER_RUNNER_HISTORY")
+  end
+end
