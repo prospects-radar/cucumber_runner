@@ -25,5 +25,10 @@ module CucumberRunner
     initializer "cucumber_runner.i18n" do
       config.i18n.load_path += Dir[Engine.root.join("config/locales/**/*.yml")]
     end
+
+    config.after_initialize do
+      CucumberRunner::RunOrchestrator.instance.stop_all_silently rescue nil
+      Kernel.at_exit { CucumberRunner::RunOrchestrator.instance.stop_all_silently rescue nil }
+    end
   end
 end

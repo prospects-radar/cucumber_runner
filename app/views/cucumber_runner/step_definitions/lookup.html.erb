@@ -1,0 +1,12 @@
+<%# app/views/cucumber_runner/step_definitions/lookup.html.erb %>
+<div class="cr-stepdef-panel">
+  <h2>Step definition</h2>
+  <p class="cr-muted">Gherkin: <code><%= @text %></code></p>
+  <% if @match %>
+    <p><strong><%= @match[:file].sub(Rails.root.to_s + "/", "") %>:<%= @match[:line] %></strong></p>
+    <pre class="cr-code"><%= @match[:source] %></pre>
+  <% else %>
+    <p class="cr-muted">No matching step definition found.</p>
+  <% end %>
+  <p><%= link_to "← back", :back %></p>
+</div>

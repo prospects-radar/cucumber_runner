@@ -1,0 +1,62 @@
+<%# app/views/cucumber_runner/runs/show.html.erb %>
+<div class="cr-runtime"
+     data-controller="cucumber-runner-runtime"
+     data-cucumber-runner-runtime-run-id-value="<%= @run_id %>">
+  <section class="cr-runtime-steps">
+    <header class="cr-controls">
+      <button data-action="click->cucumber-runner-runtime#continue">▶ Continue</button>
+      <button data-action="click->cucumber-runner-runtime#step">⏭ Step</button>
+      <button data-action="click->cucumber-runner-runtime#pauseNow">⏸ Pause</button>
+      <button data-action="click->cucumber-runner-runtime#stop">■ Stop</button>
+      <label class="cr-speed">
+        Speed:
+        <select data-action="change->cucumber-runner-runtime#setSpeed"
+                data-cucumber-runner-runtime-target="speed">
+          <% [["Full", 0], ["Quick (0.5s)", 500], ["Normal (1s)", 1000],
+              ["Slow (2s)", 2000], ["Teaching (3s)", 3000]].each do |label, ms| %>
+            <option value="<%= ms %>" <%= "selected" if @run.step_delay_ms == ms %>><%= label %></option>
+          <% end %>
+        </select>
+      </label>
+      <span class="cr-status" data-cucumber-runner-runtime-target="status">starting…</span>
+    </header>
+    <header class="cr-feature-header cr-feature-header--compact">
+      <span class="cr-feature-label">Feature</span>
+      <h2 class="cr-feature-name"><%= @scenario[:feature_name] %></h2>
+      <h3 class="cr-scenario-name"><%= @scenario[:name] %></h3>
+    </header>
+
+    <%
+      bg_count = @scenario[:background_steps].to_a.size
+    %>
+
+    <ol class="cr-step-list" data-cucumber-runner-runtime-target="stepList" start="1">
+      <% if bg_count > 0 %>
+        <li class="cr-section-label-row" aria-hidden="true">Background</li>
+      <% end %>
+      <% @scenario[:steps].each_with_index do |step, idx| %>
+        <% if bg_count > 0 && idx == bg_count %>
+          <li class="cr-section-label-row" aria-hidden="true">Scenario steps</li>
+        <% end %>
+        <li class="cr-step <%= "cr-step--background" if idx < bg_count %> <%= "has-bp" if @run.breakpoint?(idx) %>"
+            data-step-index="<%= idx %>"
+            data-action="click->cucumber-runner-runtime#toggleBreakpoint">
+          <span class="cr-step-status" aria-hidden="true"></span>
+          <span class="cr-bp-dot" title="Toggle breakpoint"></span>
+          <span class="cr-keyword"><%= step[:keyword] %></span>
+          <span class="cr-text"><%= step[:text] %></span>
+        </li>
+      <% end %>
+    </ol>
+  </section>
+  <section class="cr-runtime-canvas">
+    <div class="cr-canvas-wrap">
+      <canvas class="cr-canvas" data-cucumber-runner-runtime-target="canvas" width="1280" height="800"></canvas>
+    </div>
+    <div class="cr-error" data-cucumber-runner-runtime-target="error" hidden></div>
+  </section>
+  <footer class="cr-runtime-footer" data-cucumber-runner-runtime-target="footer" hidden>
+    <%= link_to "Run again", scenario_path(@scenario[:id]), class: "cr-link" %>
+    <%= link_to "Pick another scenario", root_path, class: "cr-link" %>
+  </footer>
+</div>

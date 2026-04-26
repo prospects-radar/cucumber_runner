@@ -1,0 +1,51 @@
+<%# app/views/cucumber_runner/browse/index.html.erb %>
+<div data-controller="cucumber-runner-browse">
+  <h1>Scenarios</h1>
+
+  <input type="search"
+         data-cucumber-runner-browse-target="search"
+         data-action="input->cucumber-runner-browse#filter"
+         placeholder="Search scenarios…"
+         class="cr-search">
+
+  <div class="cr-tag-chips" data-cucumber-runner-browse-target="tagChips">
+    <% @all_tags.each do |tag| %>
+      <button type="button"
+              class="cr-tag-chip"
+              data-tag="<%= tag %>"
+              data-action="click->cucumber-runner-browse#toggleTag"><%= tag %></button>
+    <% end %>
+  </div>
+
+  <script type="application/json" data-cucumber-runner-browse-target="data">
+    <%= raw JSON.generate(
+      @features.flat_map { |f|
+        f[:scenarios].map { |s|
+          {
+            id: s[:id],
+            name: s[:name],
+            featureName: f[:name],
+            tags: s[:tags],
+            href: scenario_path(s[:id])
+          }
+        }
+      }
+    ) %>
+  </script>
+
+  <ul class="cr-scenarios" data-cucumber-runner-browse-target="list">
+    <% @features.each do |feature| %>
+      <li class="cr-feature">
+        <h2><%= feature[:name] %></h2>
+        <ul>
+          <% feature[:scenarios].each do |scenario| %>
+            <li class="cr-scenario" data-tags="<%= scenario[:tags].join(' ') %>">
+              <%= link_to scenario[:name], scenario_path(scenario[:id]) %>
+              <% scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+</div>
