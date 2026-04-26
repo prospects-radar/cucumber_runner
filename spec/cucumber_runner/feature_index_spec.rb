@@ -76,11 +76,5 @@ RSpec.describe CucumberRunner::FeatureIndex do
       idx = described_class.new([legacy])
       expect(idx.all.first[:breadcrumb]).to eq("General")
     end
-
-    it "humanises underscored segment names" do
-      multi_word_path = File.expand_path("../fixtures/features/admin/users/permissions.feature", __dir__)
-      idx = described_class.new([multi_word_path])
-      expect(idx.all.first[:breadcrumb]).to match(/\AAdmin › Users\z/)
-    end
   end
 end

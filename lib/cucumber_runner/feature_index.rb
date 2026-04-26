@@ -78,7 +78,7 @@ module CucumberRunner
       rel = path.sub(%r{.*?/features/}, "")
       return "General" if rel == path # no /features/ segment found
       segments = rel.split("/")[0..-2]
-      return "General" if segments.nil? || segments.empty?
+      return "General" if segments.empty?
       segments.map { |s| humanise_segment(s) }.join(" › ")
     end
 
