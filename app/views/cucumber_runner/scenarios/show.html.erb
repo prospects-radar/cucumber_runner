@@ -1,6 +1,10 @@
 <%# app/views/cucumber_runner/scenarios/show.html.erb %>
 <div class="cr-scenario-detail">
-  <p><%= link_to "← All scenarios", root_path %></p>
+  <nav class="cr-scenario-nav">
+    <%= link_to "← All scenarios", root_path, class: "cr-link" %>
+    <%= prev_next_link(:prev, @prev_scenario) %>
+    <%= prev_next_link(:next, @next_scenario) %>
+  </nav>
 
   <header class="cr-feature-header">
     <span class="cr-feature-label">Feature</span>
