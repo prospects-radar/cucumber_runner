@@ -21,4 +21,24 @@ RSpec.describe CucumberRunner::Configuration do
   ensure
     CucumberRunner.instance_variable_set(:@configuration, nil)
   end
+
+  it "defaults history settings to nil/sane values" do
+    c = described_class.new
+    expect(c.history_url).to be_nil
+    expect(c.history_project_id).to be_nil
+    expect(c.history_api_token).to be_nil
+    expect(c.history_default_record_mode).to eq(:per_step)
+  end
+
+  it "allows overriding history settings" do
+    c = described_class.new
+    c.history_url = "https://example"
+    c.history_project_id = "x"
+    c.history_api_token = "tok"
+    c.history_default_record_mode = :screencast
+    expect(c.history_url).to eq("https://example")
+    expect(c.history_project_id).to eq("x")
+    expect(c.history_api_token).to eq("tok")
+    expect(c.history_default_record_mode).to eq(:screencast)
+  end
 end
