@@ -1,0 +1,1 @@
+default: --format CucumberRunner::Formatter --format pretty --strict

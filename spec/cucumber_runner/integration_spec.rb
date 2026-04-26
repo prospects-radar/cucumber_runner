@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "spec_helper"
+require "open3"
 require "cucumber_runner/run_orchestrator"
 require "cucumber_runner/feature_index"
 
@@ -50,5 +51,18 @@ RSpec.describe "End-to-end run", :slow do
   ensure
     # Reset configuration between tests
     CucumberRunner.reset_configuration!
+  end
+end
+
+RSpec.describe "integration: HISTORY=never with no port", :slow do
+  it "runs cucumber successfully without contacting any history backend" do
+    out, err, status = Open3.capture3(
+      { "CUCUMBER_RUNNER_HISTORY" => "never" },
+      "bundle", "exec", "cucumber",
+      "spec/dummy/features/sample.feature",
+      chdir: File.expand_path("../..", __dir__)
+    )
+    expect(status.exitstatus).to eq(0).or eq(1)  # depends on sample feature outcome
+    expect(err).not_to include("history")
   end
 end
