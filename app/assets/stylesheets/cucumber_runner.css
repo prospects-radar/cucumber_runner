@@ -456,3 +456,45 @@ a:visited:hover { color: var(--cr-link-hover); }
   font-size: 13px;
   white-space: pre;
 }
+
+/* === Breadcrumb directory groups === */
+.cr-breadcrumb-group {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+}
+.cr-breadcrumb-group.is-hidden { display: none; }
+.cr-breadcrumb-heading {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cr-muted-strong);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--cr-border);
+}
+.cr-breadcrumb-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* === Scenario detail nav strip === */
+.cr-scenario-nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* === Disabled prev/next link === */
+.cr-link--disabled {
+  color: var(--cr-muted);
+  background: var(--cr-panel);
+  border-color: var(--cr-border);
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
