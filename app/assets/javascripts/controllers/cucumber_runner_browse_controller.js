@@ -38,5 +38,10 @@ export default class extends Controller {
 
       li.classList.toggle("is-hidden", !(matchesSearch && matchesTags))
     })
+
+    this.listTarget.querySelectorAll(".cr-breadcrumb-group").forEach((group) => {
+      const visible = group.querySelectorAll(".cr-scenario:not(.is-hidden)").length
+      group.classList.toggle("is-hidden", visible === 0)
+    })
   }
 }
