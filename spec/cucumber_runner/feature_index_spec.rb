@@ -50,4 +50,37 @@ RSpec.describe CucumberRunner::FeatureIndex do
     expect(s[:feature_name]).to eq("Sample CRM")
     expect(s[:feature_description]).to include("As a user")
   end
+
+  describe "#breadcrumb_for" do
+    let(:nested) { File.expand_path("../fixtures/features/admin/users/permissions.feature", __dir__) }
+    let(:single) { File.expand_path("../fixtures/features/onboarding/sign_up.feature", __dir__) }
+    let(:root)   { File.expand_path("../fixtures/features/root_only.feature", __dir__) }
+
+    it "joins humanised path segments with ' › ' for nested directories" do
+      idx = described_class.new([nested])
+      expect(idx.all.first[:breadcrumb]).to eq("Admin › Users")
+    end
+
+    it "uses a single humanised segment for one-level subdirectories" do
+      idx = described_class.new([single])
+      expect(idx.all.first[:breadcrumb]).to eq("Onboarding")
+    end
+
+    it "returns 'General' for files directly under features/" do
+      idx = described_class.new([root])
+      expect(idx.all.first[:breadcrumb]).to eq("General")
+    end
+
+    it "returns 'General' when path has no features/ segment" do
+      legacy = File.expand_path("../fixtures/sample.feature", __dir__)
+      idx = described_class.new([legacy])
+      expect(idx.all.first[:breadcrumb]).to eq("General")
+    end
+
+    it "humanises underscored segment names" do
+      multi_word_path = File.expand_path("../fixtures/features/admin/users/permissions.feature", __dir__)
+      idx = described_class.new([multi_word_path])
+      expect(idx.all.first[:breadcrumb]).to match(/\AAdmin › Users\z/)
+    end
+  end
 end

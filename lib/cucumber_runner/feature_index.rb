@@ -58,6 +58,7 @@ module CucumberRunner
 
       [{
         path: path,
+        breadcrumb: breadcrumb_for(path),
         name: feature.name,
         description: feature.description.to_s.strip,
         tags: feature_tags,
@@ -71,6 +72,18 @@ module CucumberRunner
 
     def digest(path, line)
       Digest::SHA1.hexdigest("#{path}:#{line}")[0, 16]
+    end
+
+    def breadcrumb_for(path)
+      rel = path.sub(%r{.*?/features/}, "")
+      return "General" if rel == path # no /features/ segment found
+      segments = rel.split("/")[0..-2]
+      return "General" if segments.nil? || segments.empty?
+      segments.map { |s| humanise_segment(s) }.join(" › ")
+    end
+
+    def humanise_segment(segment)
+      segment.tr("_-", "  ").split.map(&:capitalize).join(" ")
     end
   end
 end
