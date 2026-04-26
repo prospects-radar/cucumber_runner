@@ -16,6 +16,18 @@ module CucumberRunner
       all.flat_map { |f| f[:scenarios] }.find { |s| s[:id] == scenario_id }
     end
 
+    def neighbors(scenario_id)
+      target_feature = all.find { |f| f[:scenarios].any? { |s| s[:id] == scenario_id } }
+      return { prev: nil, next: nil } unless target_feature
+
+      list = target_feature[:scenarios]
+      i = list.index { |s| s[:id] == scenario_id }
+      return { prev: nil, next: nil } unless i
+
+      { prev: i > 0 ? list[i - 1] : nil,
+        next: i < list.size - 1 ? list[i + 1] : nil }
+    end
+
     private
 
     def parse_file(path)

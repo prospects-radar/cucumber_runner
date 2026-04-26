@@ -77,4 +77,41 @@ RSpec.describe CucumberRunner::FeatureIndex do
       expect(idx.all.first[:breadcrumb]).to eq("General")
     end
   end
+
+  describe "#neighbors" do
+    let(:multi)  { File.expand_path("../fixtures/features/multi_scenario.feature", __dir__) }
+    let(:index)  { described_class.new([multi]) }
+    let(:scenarios) { index.all.first[:scenarios] }
+
+    it "returns nil prev for the first scenario in a file" do
+      n = index.neighbors(scenarios.first[:id])
+      expect(n[:prev]).to be_nil
+      expect(n[:next][:name]).to eq("Bravo")
+    end
+
+    it "returns both neighbors for a middle scenario" do
+      n = index.neighbors(scenarios[1][:id])
+      expect(n[:prev][:name]).to eq("Alpha")
+      expect(n[:next][:name]).to eq("Charlie")
+    end
+
+    it "returns nil next for the last scenario in a file" do
+      n = index.neighbors(scenarios.last[:id])
+      expect(n[:prev][:name]).to eq("Bravo")
+      expect(n[:next]).to be_nil
+    end
+
+    it "does not cross feature-file boundaries" do
+      single = File.expand_path("../fixtures/features/onboarding/sign_up.feature", __dir__)
+      idx = described_class.new([single, multi])
+      single_scenario = idx.all.find { |f| f[:path] == single }[:scenarios].first
+      n = idx.neighbors(single_scenario[:id])
+      expect(n[:prev]).to be_nil
+      expect(n[:next]).to be_nil
+    end
+
+    it "returns {prev: nil, next: nil} for an unknown id" do
+      expect(index.neighbors("nonexistent")).to eq(prev: nil, next: nil)
+    end
+  end
 end
