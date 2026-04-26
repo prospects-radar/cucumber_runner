@@ -112,7 +112,8 @@ module CucumberRunner
       step = event.test_step
       return if hook_step?(step)
       result   = event.result
-      duration = ((result.duration&.nanoseconds || 0) / 1_000_000.0).round(1)
+      nanos    = result.duration&.tap { |d| d.nanoseconds }&.nanoseconds rescue nil
+      duration = ((nanos || 0) / 1_000_000.0).round(1)
       err      = error_message(result)
 
       send_event("step-finished",
