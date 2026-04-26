@@ -25,6 +25,9 @@ module CucumberRunner
       head :not_found and return unless run && run.run_id == @run_id
       @scenario = feature_index.find(run.scenario_id)
       @run = run
+      neighbors = feature_index.neighbors(@scenario[:id])
+      @prev_scenario = neighbors[:prev]
+      @next_scenario = neighbors[:next]
     end
 
     def destroy
