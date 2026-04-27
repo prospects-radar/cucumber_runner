@@ -549,7 +549,7 @@ a:visited:hover { color: var(--cr-link-hover); }
 .cr-history-tooltip {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 8px);
+  bottom: 100%;
   transform: translateX(-50%);
   min-width: 220px;
   background: var(--cr-bg-elevated);
@@ -557,17 +557,21 @@ a:visited:hover { color: var(--cr-link-hover); }
   border: 1px solid var(--cr-border-strong);
   border-radius: 8px;
   padding: 10px 12px;
+  /* Bottom padding doubles as the visual gap to the dot AND keeps
+     the hover area continuous so the cursor never crosses dead space. */
+  padding-bottom: 14px;
+  margin-bottom: -4px;
   box-shadow: var(--cr-shadow);
   font-size: 12px;
   text-align: left;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.12s, visibility 0.12s;
-  pointer-events: none;
   z-index: 30;
 }
 .cr-history-dot:hover .cr-history-tooltip,
-.cr-history-dot:focus .cr-history-tooltip {
+.cr-history-dot:focus .cr-history-tooltip,
+.cr-history-tooltip:hover {
   visibility: visible;
   opacity: 1;
 }
