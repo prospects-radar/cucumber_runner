@@ -2,6 +2,7 @@
 module CucumberRunner
   class ApplicationController < ::ApplicationController
     layout "cucumber_runner/layouts/cucumber_runner"
+    helper CucumberRunner::ScenarioNavHelper
 
     before_action :guard_environment
 
