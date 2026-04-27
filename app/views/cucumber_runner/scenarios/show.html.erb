@@ -4,6 +4,9 @@
     <%= link_to "← All scenarios", root_path, class: "cr-link" %>
     <%= prev_next_link(:prev, @prev_scenario) %>
     <%= prev_next_link(:next, @next_scenario) %>
+    <%= button_to "▶ Run", runs_path(scenario_id: @scenario[:id]),
+                  method: :post, class: "cr-link cr-link--run",
+                  form: { class: "cr-link-form" } %>
   </nav>
 
   <header class="cr-feature-header">

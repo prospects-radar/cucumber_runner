@@ -444,6 +444,20 @@ a:visited:hover { color: var(--cr-link-hover); }
    participate as the flex item so it lines up with sibling links. */
 .cr-link-form { display: contents; }
 
+/* Primary-action variant: same shape as .cr-link but accent-filled,
+   used for "Run" in the scenario nav strip. */
+.cr-link--run {
+  background: var(--cr-accent);
+  color: #0a1018;
+  border-color: var(--cr-accent);
+  font-weight: 600;
+}
+.cr-link--run:hover {
+  background: var(--cr-link-hover);
+  border-color: var(--cr-link-hover);
+  color: #0a1018;
+}
+
 /* === Step-def lookup panel === */
 .cr-stepdef-panel {
   max-width: 800px;
