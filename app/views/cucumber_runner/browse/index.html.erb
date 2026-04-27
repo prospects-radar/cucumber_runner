@@ -52,7 +52,9 @@
                         <%= render "cucumber_runner/browse/history_dot", run: run %>
                       <% end %>
                     </span>
-                    <% scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
+                    <span class="cr-scenario-tags">
+                      <% scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
+                    </span>
                   </li>
                 <% end %>
               </ul>

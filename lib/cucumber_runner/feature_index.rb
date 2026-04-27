@@ -9,7 +9,7 @@ module CucumberRunner
     end
 
     def all
-      @all ||= @paths.flat_map { |p| Dir.glob(p) }.flat_map { |p| parse_file(p) }
+      @all ||= @paths.flat_map { |p| Dir.glob(p) }.sort.flat_map { |p| parse_file(p) }
     end
 
     def find(scenario_id)
@@ -17,15 +17,12 @@ module CucumberRunner
     end
 
     def neighbors(scenario_id)
-      target_feature = all.find { |f| f[:scenarios].any? { |s| s[:id] == scenario_id } }
-      return { prev: nil, next: nil } unless target_feature
-
-      list = target_feature[:scenarios]
-      i = list.index { |s| s[:id] == scenario_id }
+      flat = all.flat_map { |f| f[:scenarios] }
+      i = flat.index { |s| s[:id] == scenario_id }
       return { prev: nil, next: nil } unless i
 
-      { prev: i > 0 ? list[i - 1] : nil,
-        next: i < list.size - 1 ? list[i + 1] : nil }
+      { prev: i > 0 ? flat[i - 1] : nil,
+        next: i < flat.size - 1 ? flat[i + 1] : nil }
     end
 
     private

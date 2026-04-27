@@ -73,7 +73,11 @@ module CucumberRunner
       url   = ENV["CUCUMBER_RUNNER_HISTORY_URL"]
       proj  = ENV["CUCUMBER_RUNNER_PROJECT_ID"]
       token = ENV["CUCUMBER_RUNNER_API_TOKEN"]
-      return if url.nil? || proj.nil? || token.nil?
+      warn "[cucumber_runner] install_history_recorder: url=#{url.inspect} proj=#{proj.inspect} token=#{token ? "<set>" : "<unset>"} history_mode=#{@history_mode.inspect}"
+      if url.nil? || proj.nil? || token.nil?
+        warn "[cucumber_runner] install_history_recorder: SKIPPED — missing env var"
+        return
+      end
 
       client   = HistoryClient.new(url: url, token: token)
       metadata = RunMetadata.new

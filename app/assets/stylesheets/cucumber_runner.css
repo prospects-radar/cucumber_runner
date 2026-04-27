@@ -137,17 +137,26 @@ a:visited:hover { color: var(--cr-link-hover); }
 .cr-feature ul { list-style: none; padding: 0; margin: 0; }
 .cr-scenario {
   padding: 8px 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 90px auto;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
+  gap: 12px;
   border-top: 1px dashed var(--cr-border);
 }
 .cr-scenario:first-child { border-top: none; }
 .cr-scenario.is-hidden { display: none; }
-.cr-scenario a { color: var(--cr-link); flex: 1; min-width: 200px; }
-.cr-scenario a:visited { color: var(--cr-link); }
-.cr-scenario a:hover { color: var(--cr-link-hover); }
+.cr-scenario > a.cr-scenario-link,
+.cr-scenario .cr-scenario-link { color: var(--cr-link); }
+.cr-scenario > a.cr-scenario-link:visited,
+.cr-scenario .cr-scenario-link:visited { color: var(--cr-link); }
+.cr-scenario > a.cr-scenario-link:hover,
+.cr-scenario .cr-scenario-link:hover { color: var(--cr-link-hover); }
+.cr-scenario-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
 /* button_to-rendered scenario link: visually identical to a text link
    so the click-to-run experience reads as plain text in the list. */
 .cr-scenario-form { display: contents; }
@@ -160,8 +169,7 @@ a:visited:hover { color: var(--cr-link-hover); }
   text-align: left;
   color: var(--cr-link);
   cursor: pointer;
-  flex: 1;
-  min-width: 200px;
+  width: 100%;
 }
 .cr-scenario-link:hover { color: var(--cr-link-hover); text-decoration: underline; }
 
@@ -274,7 +282,7 @@ a:visited:hover { color: var(--cr-link-hover); }
 /* === Runtime view (escapes the centered layout for max canvas size) === */
 .cr-runtime {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 480px 1fr;
   gap: 16px;
   width: calc(100vw - 48px);
   margin-left: calc(50% - 50vw + 24px);
@@ -498,8 +506,9 @@ a:visited:hover { color: var(--cr-link-hover); }
 .cr-history-strip {
   display: inline-flex;
   gap: 4px;
-  margin: 0 8px;
   align-items: center;
+  justify-content: flex-end;
+  /* sits in its own grid column (.cr-scenario col 2, 90px) */
 }
 .cr-history-dot {
   position: relative;
@@ -510,6 +519,10 @@ a:visited:hover { color: var(--cr-link-hover); }
   background: var(--cr-muted);
   border: 1px solid var(--cr-border-strong);
   text-decoration: none;
+  /* Override .cr-scenario a { flex: 1; min-width: 200px } which would
+     otherwise stretch the dot across the row. */
+  flex: 0 0 auto;
+  min-width: 0;
 }
 .cr-history-dot--passed { background: var(--cr-pass); border-color: var(--cr-pass); }
 .cr-history-dot--failed { background: var(--cr-fail); border-color: var(--cr-fail); }

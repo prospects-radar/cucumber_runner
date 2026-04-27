@@ -101,13 +101,28 @@ RSpec.describe CucumberRunner::FeatureIndex do
       expect(n[:next]).to be_nil
     end
 
-    it "does not cross feature-file boundaries" do
+    it "crosses feature-file boundaries alphabetically by path" do
       single = File.expand_path("../fixtures/features/onboarding/sign_up.feature", __dir__)
+      # Pass paths in non-alphabetical order — neighbors should still order them by path.
       idx = described_class.new([single, multi])
-      single_scenario = idx.all.find { |f| f[:path] == single }[:scenarios].first
-      n = idx.neighbors(single_scenario[:id])
-      expect(n[:prev]).to be_nil
-      expect(n[:next]).to be_nil
+
+      # Sorted path order: multi_scenario.feature (m) < onboarding/sign_up.feature (o)
+      # Flat scenario order: Alpha, Bravo, Charlie (from multi), then Happy path (from single).
+      multi_scenarios  = idx.all.find { |f| f[:path] == multi }[:scenarios]
+      single_scenarios = idx.all.find { |f| f[:path] == single }[:scenarios]
+      alpha = multi_scenarios.first
+      charlie = multi_scenarios.last
+      happy = single_scenarios.first
+
+      # Last scenario of one feature → first scenario of the next feature
+      expect(idx.neighbors(charlie[:id])[:next][:name]).to eq("Happy path")
+
+      # First scenario of a later feature → last scenario of the prior feature
+      expect(idx.neighbors(happy[:id])[:prev][:name]).to eq("Charlie")
+
+      # Globally first scenario has no prev; globally last has no next
+      expect(idx.neighbors(alpha[:id])[:prev]).to be_nil
+      expect(idx.neighbors(happy[:id])[:next]).to be_nil
     end
 
     it "returns {prev: nil, next: nil} for an unknown id" do
