@@ -298,7 +298,7 @@ a:visited:hover { color: var(--cr-link-hover); }
 /* === Runtime view (escapes the centered layout for max canvas size) === */
 .cr-runtime {
   display: grid;
-  grid-template-columns: 480px 1fr;
+  grid-template-columns: minmax(640px, 720px) 1fr;
   gap: 16px;
   width: calc(100vw - 48px);
   margin-left: calc(50% - 50vw + 24px);
