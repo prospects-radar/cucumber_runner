@@ -155,8 +155,22 @@ a:visited:hover { color: var(--cr-link-hover); }
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
+
+/* Header row above each feature's scenario list. Same grid template
+   as .cr-scenario so the columns line up exactly. */
+.cr-scenario-header {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cr-muted);
+  padding: 4px 0 6px;
+  border-top: none;
+  border-bottom: 1px solid var(--cr-border);
+}
+.cr-scenario-header > span { padding: 0 2px; }
 /* button_to-rendered scenario link: visually identical to a text link
    so the click-to-run experience reads as plain text in the list. */
 .cr-scenario-form { display: contents; }
@@ -504,10 +518,10 @@ a:visited:hover { color: var(--cr-link-hover); }
 
 /* === History strip in scenario browse list === */
 .cr-history-strip {
-  display: inline-flex;
+  display: flex;
   gap: 4px;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   /* sits in its own grid column (.cr-scenario col 2, 90px) */
 }
 .cr-history-dot {

@@ -41,6 +41,11 @@
             <li class="cr-feature">
               <h3><%= feature[:name] %></h3>
               <ul>
+                <li class="cr-scenario cr-scenario-header" aria-hidden="true">
+                  <span>Scenario</span>
+                  <span>Recent runs</span>
+                  <span>Tags</span>
+                </li>
                 <% feature[:scenarios].each do |scenario| %>
                   <li class="cr-scenario" data-tags="<%= scenario[:tags].join(' ') %>">
                     <%= button_to scenario[:name], runs_path(scenario_id: scenario[:id]),
