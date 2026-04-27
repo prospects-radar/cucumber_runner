@@ -9,7 +9,7 @@
 </head>
 <body class="cr-body">
   <header class="cr-topbar">
-    <%= link_to "Cucumber Runner", main_app.root_path("/cucumber-runner"), class: "cr-brand" %>
+    <%= link_to "Cucumber Runner", root_path, class: "cr-brand" %>
     <%= link_to "← Back to app", main_app.root_path, class: "cr-back" %>
   </header>
   <% if flash[:alert] %><div class="cr-flash cr-flash--alert"><%= flash[:alert] %></div><% end %>
