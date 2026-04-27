@@ -25,8 +25,7 @@
             id: s[:id],
             name: s[:name],
             featureName: f[:name],
-            tags: s[:tags],
-            href: scenario_path(s[:id])
+            tags: s[:tags]
           }
         }
       }
@@ -44,7 +43,9 @@
               <ul>
                 <% feature[:scenarios].each do |scenario| %>
                   <li class="cr-scenario" data-tags="<%= scenario[:tags].join(' ') %>">
-                    <%= link_to scenario[:name], scenario_path(scenario[:id]) %>
+                    <%= button_to scenario[:name], runs_path(scenario_id: scenario[:id]),
+                                  method: :post, class: "cr-scenario-link",
+                                  form: { class: "cr-scenario-form" } %>
                     <% scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
                   </li>
                 <% end %>

@@ -148,6 +148,22 @@ a:visited:hover { color: var(--cr-link-hover); }
 .cr-scenario a { color: var(--cr-link); flex: 1; min-width: 200px; }
 .cr-scenario a:visited { color: var(--cr-link); }
 .cr-scenario a:hover { color: var(--cr-link-hover); }
+/* button_to-rendered scenario link: visually identical to a text link
+   so the click-to-run experience reads as plain text in the list. */
+.cr-scenario-form { display: contents; }
+.cr-scenario-link {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  text-align: left;
+  color: var(--cr-link);
+  cursor: pointer;
+  flex: 1;
+  min-width: 200px;
+}
+.cr-scenario-link:hover { color: var(--cr-link-hover); text-decoration: underline; }
 
 .cr-tag {
   font-size: 11px;
@@ -159,9 +175,7 @@ a:visited:hover { color: var(--cr-link-hover); }
   white-space: nowrap;
 }
 
-/* === Scenario detail === */
-.cr-scenario-detail { max-width: 900px; }
-.cr-scenario-detail h1 { font-size: 20px; margin: 8px 0 6px; }
+/* === Scenario steps and tags === */
 .cr-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
 .cr-step-list {
   list-style: none;
@@ -182,8 +196,6 @@ a:visited:hover { color: var(--cr-link-hover); }
 .cr-step-list .cr-step:first-child { border-top: none; }
 .cr-keyword { color: var(--cr-accent); font-weight: 600; min-width: 56px; }
 .cr-text { color: var(--cr-fg); flex: 1; }
-.cr-bp-toggle { display: inline-flex; align-items: center; cursor: pointer; }
-.cr-bp-toggle input { display: none; }
 .cr-bp-dot {
   display: inline-block;
   width: 12px;
@@ -192,7 +204,6 @@ a:visited:hover { color: var(--cr-link-hover); }
   border: 2px solid var(--cr-border-strong);
   background: transparent;
 }
-.cr-bp-toggle input:checked + .cr-bp-dot { background: var(--cr-bp); border-color: var(--cr-bp); }
 .cr-step-src {
   font-size: 11px;
   padding: 2px 8px;
@@ -200,19 +211,6 @@ a:visited:hover { color: var(--cr-link-hover); }
   background: var(--cr-panel);
   border: 1px solid var(--cr-border);
 }
-.cr-run-btn {
-  background: var(--cr-accent);
-  color: #0a1018;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 24px;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.cr-run-btn:hover { background: var(--cr-link-hover); }
-.cr-run-bar { display: flex; align-items: center; gap: 16px; }
 
 /* === Feature header (above scenario name) === */
 .cr-feature-header {
@@ -223,7 +221,6 @@ a:visited:hover { color: var(--cr-link-hover); }
   padding: 12px 16px;
   margin-bottom: 18px;
 }
-.cr-feature-header--compact { padding: 8px 12px; margin-bottom: 8px; }
 .cr-feature-label {
   display: inline-block;
   font-size: 10px;
@@ -444,20 +441,6 @@ a:visited:hover { color: var(--cr-link-hover); }
    participate as the flex item so it lines up with sibling links. */
 .cr-link-form { display: contents; }
 
-/* Primary-action variant: same shape as .cr-link but accent-filled,
-   used for "Run" in the scenario nav strip. */
-.cr-link--run {
-  background: var(--cr-accent);
-  color: #0a1018;
-  border-color: var(--cr-accent);
-  font-weight: 600;
-}
-.cr-link--run:hover {
-  background: var(--cr-link-hover);
-  border-color: var(--cr-link-hover);
-  color: #0a1018;
-}
-
 /* === Step-def lookup panel === */
 .cr-stepdef-panel {
   max-width: 800px;
@@ -499,15 +482,6 @@ a:visited:hover { color: var(--cr-link-hover); }
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-/* === Scenario detail nav strip === */
-.cr-scenario-nav {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
 }
 
 /* === Disabled prev/next link === */

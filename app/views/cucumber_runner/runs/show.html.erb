@@ -20,11 +20,20 @@
       </label>
       <span class="cr-status" data-cucumber-runner-runtime-target="status">starting…</span>
     </header>
-    <header class="cr-feature-header cr-feature-header--compact">
+    <header class="cr-feature-header">
       <span class="cr-feature-label">Feature</span>
       <h2 class="cr-feature-name"><%= @scenario[:feature_name] %></h2>
-      <h3 class="cr-scenario-name"><%= @scenario[:name] %></h3>
+      <% if @scenario[:feature_description].present? %>
+        <p class="cr-feature-description"><%= simple_format(@scenario[:feature_description]) %></p>
+      <% end %>
     </header>
+
+    <h3 class="cr-scenario-name"><%= @scenario[:name] %></h3>
+    <% if @scenario[:tags].any? %>
+      <div class="cr-tags">
+        <% @scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
+      </div>
+    <% end %>
 
     <%
       bg_count = @scenario[:background_steps].to_a.size
@@ -45,6 +54,8 @@
           <span class="cr-bp-dot" title="Toggle breakpoint"></span>
           <span class="cr-keyword"><%= step[:keyword] %></span>
           <span class="cr-text"><%= step[:text] %></span>
+          <%= link_to "src", step_definitions_lookup_path(gherkin: step[:text]),
+                      class: "cr-step-src", data: { turbo_frame: "_top" } %>
         </li>
       <% end %>
     </ol>
