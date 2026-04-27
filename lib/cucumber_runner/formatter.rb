@@ -10,6 +10,7 @@ module CucumberRunner
   class Formatter
     @recorders = []
     @at_exit_installed = false
+    @process_initialized = false
 
     class << self
       def register_recorder(rec)
@@ -27,6 +28,19 @@ module CucumberRunner
     end
 
     def initialize(config)
+      # Cucumber instantiates a fresh Formatter for every `--format` directive
+      # it sees. With Plan B's host config the formatter is named both in
+      # cucumber.yml's default profile AND by the orchestrator's spawn command,
+      # so cucumber loads it twice. A second instance opening its own TCP
+      # socket and CDP screencast deadlocks: both call await_command on
+      # different sockets but the orchestrator only sends one proceed per
+      # step. Skip subsequent instantiations within the same process.
+      if Formatter.instance_variable_get(:@process_initialized)
+        warn "[cucumber_runner] formatter: skipping duplicate instance (already initialized in this process)"
+        return
+      end
+      Formatter.instance_variable_set(:@process_initialized, true)
+
       @history_mode  = (ENV["CUCUMBER_RUNNER_HISTORY"] || "auto").downcase
       @port          = ENV["CUCUMBER_RUNNER_PORT"]&.to_i
       @writer_lock   = Mutex.new
