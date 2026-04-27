@@ -171,6 +171,8 @@ a:visited:hover { color: var(--cr-link-hover); }
   border-bottom: 1px solid var(--cr-border);
 }
 .cr-scenario-header > span { padding: 0 2px; }
+/* Right-align the Tags header to match tags right-aligning in their column. */
+.cr-scenario-header > span:nth-child(3) { justify-self: end; }
 /* button_to-rendered scenario link: visually identical to a text link
    so the click-to-run experience reads as plain text in the list. */
 .cr-scenario-form { display: contents; }
