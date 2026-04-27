@@ -7,7 +7,9 @@ module CucumberRunner
     def prev_next_link(direction, scenario)
       label = direction == :prev ? PREV_LABEL : NEXT_LABEL
       if scenario
-        link_to label, scenario_path(scenario[:id]), class: "cr-link"
+        button_to label, runs_path(scenario_id: scenario[:id]),
+                  method: :post, class: "cr-link",
+                  form: { class: "cr-link-form" }
       else
         content_tag(:span, label,
                     class: "cr-link cr-link--disabled",

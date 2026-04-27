@@ -433,9 +433,16 @@ a:visited:hover { color: var(--cr-link-hover); }
   border: 1px solid var(--cr-border);
   border-radius: 6px;
   background: var(--cr-panel);
+  /* When .cr-link is applied to a <button> rendered by button_to,
+     reset the browser defaults so it matches anchor styling. */
+  font: inherit;
+  cursor: pointer;
 }
 .cr-link:hover { color: var(--cr-link-hover); border-color: var(--cr-accent); }
 .cr-link:visited { color: var(--cr-link); }
+/* button_to wraps the button in a <form>; let the button itself
+   participate as the flex item so it lines up with sibling links. */
+.cr-link-form { display: contents; }
 
 /* === Step-def lookup panel === */
 .cr-stepdef-panel {

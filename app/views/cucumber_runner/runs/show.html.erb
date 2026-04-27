@@ -56,7 +56,7 @@
     <div class="cr-error" data-cucumber-runner-runtime-target="error" hidden></div>
   </section>
   <footer class="cr-runtime-footer" data-cucumber-runner-runtime-target="footer" hidden>
-    <%= link_to "Run again", scenario_path(@scenario[:id]), class: "cr-link" %>
+    <%= button_to "Run again", runs_path(scenario_id: @scenario[:id]), method: :post, class: "cr-link", form: { class: "cr-link-form" } %>
     <%= prev_next_link(:prev, @prev_scenario) %>
     <%= prev_next_link(:next, @next_scenario) %>
     <%= link_to "Pick another scenario", root_path, class: "cr-link" %>
