@@ -1,0 +1,71 @@
+<%# app/views/cucumber_runner/history/show.html.erb %>
+<div class="cr-history-show">
+  <nav class="cr-history-nav">
+    <%= link_to "← Back to scenarios", root_path, class: "cr-link" %>
+  </nav>
+
+  <header class="cr-feature-header">
+    <span class="cr-feature-label">Past run</span>
+    <h2 class="cr-feature-name"><%= @summary["scenario_name"].presence || @run["title"] %></h2>
+    <% if @summary["feature_path"].present? %>
+      <p class="cr-feature-description"><%= File.basename(@summary["feature_path"].to_s) %><% if @summary["line"] %>:<%= @summary["line"] %><% end %></p>
+    <% end %>
+  </header>
+
+  <dl class="cr-history-meta">
+    <div><dt>Status</dt><dd class="cr-history-meta-status cr-history-meta-status--<%= @run["status"] %>"><%= @run["status"].to_s.capitalize %></dd></div>
+    <div><dt>Branch</dt><dd><%= @run["branch"].presence || "—" %></dd></div>
+    <div><dt>Commit</dt><dd><%= @run["commit_sha"].to_s[0, 12].presence || "—" %></dd></div>
+    <div><dt>Source</dt><dd><%= @run["source"].presence || "—" %></dd></div>
+    <div><dt>Actor</dt><dd><%= @run["actor"].presence || "—" %></dd></div>
+    <div>
+      <dt>Started</dt>
+      <dd>
+        <% if @run["started_at"] %>
+          <%= Time.at(@run["started_at"].to_i / 1000).strftime("%Y-%m-%d %H:%M:%S") %>
+        <% else %>—<% end %>
+      </dd>
+    </div>
+    <div>
+      <dt>Duration</dt>
+      <dd>
+        <% if @run["duration_ms"] %>
+          <%= ("%.1fs" % (@run["duration_ms"].to_i / 1000.0)) %>
+        <% else %>—<% end %>
+      </dd>
+    </div>
+  </dl>
+
+  <% if (tags = @summary["tags"]).is_a?(Array) && tags.any? %>
+    <div class="cr-tags">
+      <% tags.each do |t| %><span class="cr-tag"><%= t %></span><% end %>
+    </div>
+  <% end %>
+
+  <ol class="cr-history-events">
+    <% @events.each do |event| %>
+      <%
+        payload = JSON.parse(event["payload_json"]) rescue {}
+        status = payload["status"].to_s
+      %>
+      <li class="cr-history-event cr-history-event--<%= status %>">
+        <div class="cr-history-event-row">
+          <span class="cr-history-event-status" aria-hidden="true"></span>
+          <span class="cr-history-event-text"><%= payload["gherkin"] %></span>
+          <% if payload["duration_ms"] %>
+            <span class="cr-history-event-duration"><%= ("%.0fms" % payload["duration_ms"].to_f) %></span>
+          <% end %>
+        </div>
+        <% if event["artifact_key"].present? %>
+          <img class="cr-history-event-screenshot"
+               src="<%= history_artifact_path(@run_id, key: event["artifact_key"]) %>"
+               alt="Step <%= event["sequence"] %> screenshot"
+               loading="lazy">
+        <% end %>
+        <% if payload["error"].present? %>
+          <pre class="cr-history-event-error"><%= payload["error"] %></pre>
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+</div>

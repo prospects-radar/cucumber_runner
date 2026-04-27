@@ -493,3 +493,141 @@ a:visited:hover { color: var(--cr-link-hover); }
   cursor: default;
   pointer-events: none;
 }
+
+/* === History strip in scenario browse list === */
+.cr-history-strip {
+  display: inline-flex;
+  gap: 4px;
+  margin: 0 8px;
+  align-items: center;
+}
+.cr-history-dot {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--cr-muted);
+  border: 1px solid var(--cr-border-strong);
+  text-decoration: none;
+}
+.cr-history-dot--passed { background: var(--cr-pass); border-color: var(--cr-pass); }
+.cr-history-dot--failed { background: var(--cr-fail); border-color: var(--cr-fail); }
+.cr-history-dot--aborted { background: var(--cr-warning); border-color: var(--cr-warning); }
+.cr-history-dot--running { background: var(--cr-accent); border-color: var(--cr-accent); }
+
+/* CSS-only hover tooltip */
+.cr-history-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  min-width: 220px;
+  background: var(--cr-bg-elevated);
+  color: var(--cr-fg);
+  border: 1px solid var(--cr-border-strong);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: var(--cr-shadow);
+  font-size: 12px;
+  text-align: left;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.12s, visibility 0.12s;
+  pointer-events: none;
+  z-index: 30;
+}
+.cr-history-dot:hover .cr-history-tooltip,
+.cr-history-dot:focus .cr-history-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.cr-history-tooltip-title {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--cr-fg);
+}
+.cr-history-tooltip-meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 2px 10px;
+  margin: 0 0 8px;
+}
+.cr-history-tooltip-meta dt { color: var(--cr-muted); }
+.cr-history-tooltip-meta dd { margin: 0; color: var(--cr-fg); }
+.cr-history-tooltip-cta {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--cr-link);
+}
+
+/* === History viewer page === */
+.cr-history-show { max-width: 900px; }
+.cr-history-nav { margin-bottom: 16px; }
+.cr-history-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px 16px;
+  margin: 16px 0 20px;
+  padding: 12px 16px;
+  background: var(--cr-bg-elevated);
+  border: 1px solid var(--cr-border);
+  border-radius: 8px;
+  font-size: 13px;
+}
+.cr-history-meta dt { color: var(--cr-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; }
+.cr-history-meta dd { margin: 0; color: var(--cr-fg); }
+.cr-history-meta-status--passed  { color: var(--cr-pass); font-weight: 600; }
+.cr-history-meta-status--failed  { color: var(--cr-fail); font-weight: 600; }
+.cr-history-meta-status--aborted { color: var(--cr-warning); font-weight: 600; }
+
+.cr-history-events {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cr-history-event {
+  border-left: 3px solid var(--cr-border);
+  background: var(--cr-bg-elevated);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+}
+.cr-history-event--passed  { border-left-color: var(--cr-pass); background: var(--cr-pass-soft); }
+.cr-history-event--failed  { border-left-color: var(--cr-fail); background: var(--cr-fail-soft); }
+.cr-history-event--skipped { border-left-color: var(--cr-muted); }
+.cr-history-event-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cr-history-event-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--cr-muted);
+  flex-shrink: 0;
+}
+.cr-history-event--passed .cr-history-event-status { background: var(--cr-pass); }
+.cr-history-event--failed .cr-history-event-status { background: var(--cr-fail); }
+.cr-history-event-text  { flex: 1; color: var(--cr-fg); font-family: ui-monospace, "SFMono-Regular", monospace; font-size: 13px; }
+.cr-history-event-duration { color: var(--cr-muted); font-size: 11px; }
+.cr-history-event-screenshot {
+  display: block;
+  max-width: 100%;
+  margin-top: 10px;
+  border: 1px solid var(--cr-border);
+  border-radius: 6px;
+}
+.cr-history-event-error {
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--cr-panel);
+  border: 1px solid var(--cr-fail);
+  border-radius: 6px;
+  color: var(--cr-fail);
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}

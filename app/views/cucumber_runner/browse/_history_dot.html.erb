@@ -1,0 +1,27 @@
+<%# Status dot for one historical run, with a CSS-hover tooltip showing
+    meta info. Clicking the dot opens the frozen run viewer. %>
+<a class="cr-history-dot cr-history-dot--<%= run["status"] %>"
+   href="<%= history_path(run["id"]) %>"
+   title="<%= run["status"].to_s.capitalize %>">
+  <span class="cr-history-tooltip" role="tooltip">
+    <span class="cr-history-tooltip-title"><%= run["status"].to_s.capitalize %></span>
+    <dl class="cr-history-tooltip-meta">
+      <dt>Branch</dt><dd><%= run["branch"].presence || "—" %></dd>
+      <dt>Commit</dt><dd><%= run["commit_sha"].to_s[0, 7].presence || "—" %></dd>
+      <dt>Started</dt>
+      <dd>
+        <% if run["started_at"] %>
+          <%= time_ago_in_words(Time.at(run["started_at"].to_i / 1000)) %> ago
+        <% else %>—<% end %>
+      </dd>
+      <dt>Duration</dt>
+      <dd>
+        <% if run["duration_ms"] %>
+          <%= ("%.1fs" % (run["duration_ms"].to_i / 1000.0)) %>
+        <% else %>—<% end %>
+      </dd>
+      <dt>Source</dt><dd><%= run["source"].presence || "—" %></dd>
+    </dl>
+    <span class="cr-history-tooltip-cta">Step through →</span>
+  </span>
+</a>

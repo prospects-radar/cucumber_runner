@@ -46,6 +46,12 @@
                     <%= button_to scenario[:name], runs_path(scenario_id: scenario[:id]),
                                   method: :post, class: "cr-scenario-link",
                                   form: { class: "cr-scenario-form" } %>
+                    <% recent_runs = (@runs_by_scenario["#{scenario[:path]}:#{scenario[:line]}"] || []).first(5) %>
+                    <span class="cr-history-strip" aria-label="Recent runs">
+                      <% recent_runs.reverse_each do |run| %>
+                        <%= render "cucumber_runner/browse/history_dot", run: run %>
+                      <% end %>
+                    </span>
                     <% scenario[:tags].each do |t| %><span class="cr-tag"><%= t %></span><% end %>
                   </li>
                 <% end %>
