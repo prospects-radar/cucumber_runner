@@ -60,7 +60,8 @@
           <img class="cr-history-event-screenshot"
                src="<%= history_artifact_path(@run_id, key: event["artifact_key"]) %>"
                alt="Step <%= event["sequence"] %> screenshot"
-               loading="lazy">
+               loading="lazy"
+               crossorigin="anonymous">
         <% end %>
         <% if payload["error"].present? %>
           <pre class="cr-history-event-error"><%= payload["error"] %></pre>
@@ -69,3 +70,39 @@
     <% end %>
   </ol>
 </div>
+<script>
+  // Hide screenshot images whose visible content is essentially blank
+  // (e.g. the browser was on about:blank or a white page when the
+  // step ran). Sample 8x8 pixels and consider the image blank if every
+  // pixel is near-white.
+  (function () {
+    const NEAR_WHITE = 240;
+    function isBlank(img) {
+      try {
+        const c = document.createElement("canvas");
+        c.width = 8; c.height = 8;
+        const ctx = c.getContext("2d");
+        ctx.drawImage(img, 0, 0, 8, 8);
+        const data = ctx.getImageData(0, 0, 8, 8).data;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i] < NEAR_WHITE || data[i+1] < NEAR_WHITE || data[i+2] < NEAR_WHITE) {
+            return false;
+          }
+        }
+        return true;
+      } catch (e) {
+        return false; // CORS or other issue — keep image visible
+      }
+    }
+    function check(img) {
+      if (isBlank(img)) img.classList.add("cr-history-event-screenshot--blank");
+    }
+    document.querySelectorAll(".cr-history-event-screenshot").forEach(function (img) {
+      if (img.complete && img.naturalWidth) {
+        check(img);
+      } else {
+        img.addEventListener("load", function () { check(img); });
+      }
+    });
+  })();
+</script>

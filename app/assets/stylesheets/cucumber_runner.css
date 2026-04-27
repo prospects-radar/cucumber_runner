@@ -653,6 +653,9 @@ a:visited:hover { color: var(--cr-link-hover); }
   border: 1px solid var(--cr-border);
   border-radius: 6px;
 }
+/* JS marks screenshots as blank when their pixels are uniformly near-white
+   (about:blank, unrendered page) — hide them to keep the timeline tidy. */
+.cr-history-event-screenshot--blank { display: none; }
 .cr-history-event-error {
   margin-top: 10px;
   padding: 10px;
