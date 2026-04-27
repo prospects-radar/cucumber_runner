@@ -36,6 +36,12 @@ module CucumberRunner
       install_history_recorder unless @history_mode == "never" && @port.nil?
       install_socket_bridge(config) if @port
 
+      # Without a socket bridge or a recorder there is nothing for the
+      # formatter to do. Skip event registration so plain `cucumber` runs
+      # behave exactly as if the formatter were not loaded — no buffering,
+      # no callbacks, no per-step overhead.
+      return unless @sock || @recorder
+
       config.on_event(:test_run_started)   { |_| send_event("run-started") if @sock }
       config.on_event(:test_case_started)  { |event| handle_test_case_started(event) }
       config.on_event(:test_step_started)  do |event|

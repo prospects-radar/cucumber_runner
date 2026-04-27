@@ -76,4 +76,11 @@ RSpec.describe CucumberRunner::Formatter, "history-disabled" do
     described_class.new(fake_config)
     ENV.delete("CUCUMBER_RUNNER_HISTORY")
   end
+
+  it "registers no event callbacks when API keys are absent and no port is set" do
+    %w[CUCUMBER_RUNNER_PORT CUCUMBER_RUNNER_HISTORY_URL CUCUMBER_RUNNER_PROJECT_ID CUCUMBER_RUNNER_API_TOKEN CUCUMBER_RUNNER_HISTORY].each { |k| ENV.delete(k) }
+    config = double("config")
+    expect(config).not_to receive(:on_event)
+    described_class.new(config)
+  end
 end
